@@ -9,9 +9,6 @@ const app = express();
 app.use(express.json()); // Middleware to parse JSON request bodies
 app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded request bodies
 
-// script dependencies;
-const auth = require('./login.js');
-
 // Define the port number
 const PORT = 5000;
 
