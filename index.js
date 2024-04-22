@@ -13,11 +13,19 @@ app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-enco
 const PORT = process.env.PORT || 5000;
 
 // MySQL database connection configuration
+// const dbConfig = {
+//     host: 'localhost',
+//     user: 'root',
+//     password: 'root',
+//     database: 'apotek'
+// };
 const dbConfig = {
-    host: 'localhost',
+    host: 'roundhouse.proxy.rlwy.net',
     user: 'root',
-    password: 'root',
-    database: 'apotek'
+    password: 'MRLHYGJjtSWWMUuZKkvYMlhUESusYyOX',
+    database: 'apotek',
+    port: 25271,
+    protocol: 'TCP'
 };
 
 // Create a MySQL connection pool
@@ -38,7 +46,7 @@ app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-// API SECTION
+// FUNCTIONAL API SECTION
 // getting user credentials
 app.get('/login', (req, res) => {
 
@@ -59,19 +67,20 @@ app.get('/login', (req, res) => {
         res.json(results);
     });
 });
-
 // getting stock data
-app.get('/stock', (req, res) => {
+app.get('/stock', (res) => {
 
-    const sql = `SELECT 
-                    medicine_stock.received_date, medicine.medicine_name,medicine_stock.medicine_qty, 
-                    medicine_stock.qty_unit, medicine.sell_price, medicine_stock.medicine_exp_date
-                 FROM 
-                    medicine_stock 
-                 LEFT JOIN 
-                    medicine 
-                 ON 
-                    medicine_stock.medicine_id  = medicine.medicine_id`
+    const sql = `select 
+                    invoice_number, received_date, equipment_name stock_name, equipment_qty qty, qty_unit unit, null exp_date, 'equipment' category
+                    from equipment_stock left join equipment using(equipment_id)
+                union all
+                select
+                    invoice_number, received_date, medicine_name, medicine_qty, qty_unit, medicine_exp_date, 'medicine'
+                    from medicine_stock left join medicine using(medicine_id)
+                union all
+                select 
+                    invoice_number, received_date, ingredient_name, ingredient_qty, qty_unit, ingredient_exp_date, 'ingredient'
+                    from ingredient_stock left join ingredient using(ingredient_id);`
 
     pool.query(sql, (error, results, fields) => {
         if (error) {
@@ -84,7 +93,6 @@ app.get('/stock', (req, res) => {
         res.json(results);
     });
 });
-
 // getting current ppn value
 app.get('/get_ppn', (req, res) => {
 
@@ -96,17 +104,68 @@ app.get('/get_ppn', (req, res) => {
             res.status(500).json({ error: 'Internal Server Error' });
             return;
         }
-        console.log(results);
-        res.json(results);
+        res.json(results)
     });
 });
 
-// adjusting ppn value
-app.post('/adjust_ppn', (req, res) => {
+// API SECTION: Root Table Operations
+// ----------------------------------
+// TABLE equipment
+app.post('/new_equipment', (req, res) => {
 
-    const{ppn_value} = req.query
+    const requestBody = req.body
+    const sql = `INSERT INTO equipment (equipment_name,sell_price) VALUES ('${requestBody.equipmentName}', '${requestBody.sellPrice}');`
 
-    const sql = `UPDATE account set ppn_value = ${ppn_value}  where account_role='admin'`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('well received')
+    });
+});
+app.post('/delete_equipment', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `DELETE FROM equipment WHERE (equipment_id = '${requestBody.equipmentId}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item deleted')
+    });
+});
+app.post('/update_equipment', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `UPDATE equipment SET equipment_name = '${requestBody.equipmentName}', sell_price = '${requestBody.sellPrice}' WHERE (equipment_id = '${requestBody.equipmentId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item updated')
+    });
+});
+
+// TABLE account
+// could be use to adjust ppn value
+app.post('/update_account', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `UPDATE account set account_name = '${requestBody.accountName}',account_password='${requestBody.accountPassword}',ppn_value = ${requestBody.ppnValue} 
+                 where account_id='${requestBody.accountId}'`
 
     pool.query(sql, (error, fields) => {
         if (error) {
@@ -116,5 +175,5 @@ app.post('/adjust_ppn', (req, res) => {
         }
     });
 
-    res.send('well received')
+    res.send('item updated')
 })
