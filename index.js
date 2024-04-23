@@ -46,6 +46,7 @@ app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
 
+
 // FUNCTIONAL API SECTION
 // getting user credentials
 app.get('/login', (req, res) => {
@@ -110,6 +111,26 @@ app.get('/get_ppn', (req, res) => {
 
 // API SECTION: Root Table Operations
 // ----------------------------------
+
+// TABLE account
+// could be use to adjust ppn value
+app.post('/update_account', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `UPDATE account set account_name = '${requestBody.accountName}',account_password='${requestBody.accountPassword}',ppn_value = ${requestBody.ppnValue} 
+                 where account_id='${requestBody.accountId}'`
+
+    pool.query(sql, (error, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+    });
+
+    res.send('item updated')
+})
+
 // TABLE equipment
 app.post('/new_equipment', (req, res) => {
 
@@ -158,22 +179,617 @@ app.post('/update_equipment', (req, res) => {
         res.send('item updated')
     });
 });
-
-// TABLE account
-// could be use to adjust ppn value
-app.post('/update_account', (req, res) => {
+app.get('/get_equipment', (req, res) => {
 
     const requestBody = req.body
-    const sql = `UPDATE account set account_name = '${requestBody.accountName}',account_password='${requestBody.accountPassword}',ppn_value = ${requestBody.ppnValue} 
-                 where account_id='${requestBody.accountId}'`
+    const sql = `select * from equipment WHERE (equipment_id = '${requestBody.equipmentId}');`
 
-    pool.query(sql, (error, fields) => {
+    pool.query(sql, (error, results, fields) => {
         if (error) {
             console.error('Error executing query:', error);
             res.status(500).json({ error: 'Internal Server Error' });
             return;
         }
-    });
 
-    res.send('item updated')
-})
+        res.json(results)
+    });
+});
+
+// TABLE ingredient
+app.post('/new_ingredient', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `INSERT INTO equipment (ingredient_name,sell_price) VALUES ('${requestBody.ingredientName}', '${requestBody.sellPrice}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('well received')
+    });
+});
+app.post('/delete_ingredient', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `DELETE FROM ingredient WHERE (ingredient_id = '${requestBody.ingredientId}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item deleted')
+    });
+});
+app.post('/update_ingredient', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `UPDATE ingredient SET ingredient_name = '${requestBody.ingredientName}', sell_price = '${requestBody.sellPrice}' WHERE (ingredient_id = '${requestBody.ingredientId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item updated')
+    });
+});
+app.get('/get_ingredient', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `select * from ingredient WHERE (ingredient_id = '${requestBody.ingredientId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.json(results)
+    });
+});
+
+// TABLE order
+app.post('/new_order', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `INSERT INTO order (order_date,order_item_id) VALUES ('${requestBody.orderDate}', '${requestBody.orderItemId}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('well received')
+    });
+});
+app.post('/delete_order', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `DELETE FROM order WHERE (order_id = '${requestBody.orderId}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item deleted')
+    });
+});
+app.post('/update_order', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `UPDATE order SET order_date = '${requestBody.orderDate}', order_item_id = '${requestBody.orderItemId}' WHERE (order_id = '${requestBody.orderId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item updated')
+    });
+});
+app.get('/get_order', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `select * from order WHERE (order_id = '${requestBody.orderId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.json(results)
+    });
+});
+
+// TABLE medicine
+app.post('/new_medicine', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `INSERT INTO medicine 
+                    (medicine_name,medicine_type,sell_price) VALUES ('${requestBody.medicineName}', '${requestBody.medicineType}','${requestBody.sellPrice}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('well received')
+    });
+});
+app.post('/delete_medicine', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `DELETE FROM medicine WHERE (medicine_id = '${requestBody.medicineId}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item deleted')
+    });
+});
+app.post('/update_medicine', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `UPDATE medicine SET 
+                medicine_name = '${requestBody.medicineName}', medicine_type = '${requestBody.medicineType}', sell_price = '${requestBody.sellPrice}' WHERE (medicine_id = '${requestBody.medicineId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item updated')
+    });
+});
+app.get('/get_medicine', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `select * from medicine WHERE (medicine_id = '${requestBody.medicineId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.json(results)
+    });
+});
+
+// TABLE item_unit
+app.post('/new_unit', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `INSERT INTO item_unit 
+                    (unit_name) VALUES ('${requestBody.unitName}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('well received')
+    });
+});
+app.post('/delete_unit', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `DELETE FROM item_unit WHERE (unit_id = '${requestBody.unitId}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item deleted')
+    });
+});
+app.post('/update_unit', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `UPDATE item_unit SET 
+                unit_name = '${requestBody.unitName}' WHERE (unit_id = '${requestBody.unitId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item updated')
+    });
+});
+app.get('/get_unit', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `select * from item_unit WHERE (unit_id = '${requestBody.unitId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.json(results)
+    });
+});
+
+// TABLE medicine_component
+app.post('/new_medicine_component', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `INSERT INTO medicine_component 
+                    (component_qty, unit_id, medicine_id, ingredient_id) VALUES ('${requestBody.componentQty}','${requestBody.unitId}','${requestBody.medicineId}','${requestBody.ingredientId}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('well received')
+    });
+});
+app.post('/delete_medicine_component', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `DELETE FROM medicine_component WHERE (medicine_component_id = '${requestBody.medicineComponentId}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item deleted')
+    });
+});
+app.post('/update_medicine_component', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `UPDATE medicine_component SET 
+                component_qty = '${requestBody.componentQty}',unit_id = '${requestBody.unitId}',medicine_id = '${requestBody.medicineId}',ingredient_id= '${requestBody.ingredientId}' WHERE (medicine_component_id = '${requestBody.medicineComponentId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item updated')
+    });
+});
+app.get('/get_medicine_component', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `select * from medicine_component WHERE (medicine_component_id = '${requestBody.medicineComponentId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.json(results)
+    });
+});
+
+// TABLE order_item
+app.post('/new_order_item', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `INSERT INTO order_item 
+                    (item_qty, medicine_id, equipment_id, unit_id) VALUES ('${requestBody.itemQty}','${requestBody.medicineId}','${requestBody.equipmentId}','${requestBody.unitId}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('well received')
+    });
+});
+app.post('/delete_order_item', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `DELETE FROM order_item WHERE (order_item_id = '${requestBody.orderItemId}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item deleted')
+    });
+});
+app.post('/update_order_item', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `UPDATE order_item SET 
+                item_qty = '${requestBody.itemQty}',medicine_id = '${requestBody.medicineId}',equipment_id = '${requestBody.equipmentId}',unit_id= '${requestBody.unitId}' WHERE (order_item_id = '${requestBody.orderItemId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item updated')
+    });
+});
+app.get('/get_order_item', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `select * from order_item WHERE (order_item_id = '${requestBody.orderItemId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.json(results)
+    });
+});
+
+// TABLE medicine_stock
+app.post('/new_medicine_stock', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `INSERT INTO medicine_stock 
+                    (unit_id,medicine_qty,medicine_id,medicine_exp_date,received_date,price_per_unit,invoice_number) 
+                    VALUES ('${requestBody.unitId}','${requestBody.medicineQty}','${requestBody.medicineExpDate}','${requestBody.recievedDate}','${requestBody.pricePerUnit}','${requestBody.invoiceNumber}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('well received')
+    });
+});
+app.post('/delete_medicine_stock', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `DELETE FROM medicine_stock WHERE (medicine_stock_id = '${requestBody.medicineStockId}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item deleted')
+    });
+});
+app.post('/update_medicine_stock', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `UPDATE medicine_stock SET 
+                unit_id = '${requestBody.unitId}',medicine_qty = '${requestBody.medicineQty}',medicine_id = '${requestBody.medicineId}',medicine_exp_date='${requestBody.medicineExpDate}',received_date='${requestBody.recievedDate}',price_per_unit='${requestBody.pricePerUnit}',invoice_number='${requestBody.invoiceNumber}'
+                WHERE (order_item_id = '${requestBody.orderItemId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item updated')
+    });
+});
+app.get('/get_medicine_stock', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `select * from medicine_stock WHERE (medicine_stock_id = '${requestBody.medicineStockId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.json(results)
+    });
+});
+
+// TABLE equipment_stock
+app.post('/new_equipment_stock', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `INSERT INTO equipment_stock 
+                    (equipment_qty,equipment_id,unit_id,received_date,price_per_unit,invoice_number) 
+                    VALUES ('${requestBody.equipmentQty}','${requestBody.equipmentId}','${requestBody.unitId}','${requestBody.recievedDate}','${requestBody.pricePerUnit}','${requestBody.invoiceNumber}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('well received')
+    });
+});
+app.post('/delete_equipment_stock', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `DELETE FROM equipment_stock WHERE (equipment_stock_id = '${requestBody.equipmentStockId}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item deleted')
+    });
+});
+app.post('/update_equipment_stock', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `UPDATE equipment_stock SET 
+                unit_id = '${requestBody.unitId}',equipment_qty = '${requestBody.equipmentQty}',equipment_id = '${requestBody.equipmentId}',received_date='${requestBody.recievedDate}',price_per_unit='${requestBody.pricePerUnit}',invoice_number='${requestBody.invoiceNumber}'
+                WHERE (equipment_stock_id = '${requestBody.equipmentStockId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item updated')
+    });
+});
+app.get('/get_equipment_stock', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `select * from equipment_stock WHERE (equipment_stock_id = '${requestBody.equipmentStockId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.json(results)
+    });
+});
+
+// TABLE ingredient_stock
+app.post('/new_ingredient_stock', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `INSERT INTO ingredient_stock 
+                    (ingredient_qty,ingredient_id,unit_id,ingredient_exp_date,received_date,price_per_unit,invoice_number) 
+                    VALUES ('${requestBody.ingredientQty}','${requestBody.ingredientId}','${requestBody.unitId}','${requestBody.ingredientExpDate}','${requestBody.recievedDate}','${requestBody.pricePerUnit}','${requestBody.invoiceNumber}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('well received')
+    });
+});
+app.post('/delete_ingredient_stock', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `DELETE FROM ingredient_stock WHERE (ingredient_stock_id = '${requestBody.ingredientStockId}');`
+
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item deleted')
+    });
+});
+app.post('/update_ingredient_stock', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `UPDATE ingredient_stock SET
+                ingredient_exp_date = '${requestBody.ingredientExpDate}',
+                unit_id = '${requestBody.unitId}',ingredient_qty = '${requestBody.ingredientQty}',ingredient_id = '${requestBody.ingredientId}',received_date='${requestBody.recievedDate}',price_per_unit='${requestBody.pricePerUnit}',invoice_number='${requestBody.invoiceNumber}'
+                WHERE (ingredient_stock_id = '${requestBody.ingredientStockId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.send('item updated')
+    });
+});
+app.get('/get_ingredient_stock', (req, res) => {
+
+    const requestBody = req.body
+    const sql = `select * from ingredient_stock WHERE (ingredient_stock_id = '${requestBody.ingredientStockId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.json(results)
+    });
+});
+
+
