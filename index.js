@@ -526,7 +526,7 @@ app.post('/new_order_item', (req, res) => {
 
     const requestBody = req.body
     const sql = `INSERT INTO order_item 
-                    (item_qty, medicine_id, equipment_id, unit_id) VALUES ('${requestBody.itemQty}','${requestBody.medicineId}','${requestBody.equipmentId}','${requestBody.unitId}');`
+                    (item_qty, medicine_id, equipment_id, unit_id, order_id) VALUES ('${requestBody.itemQty}','${requestBody.medicineId}','${requestBody.equipmentId}','${requestBody.unitId}','${requestBody.orderId}');`
 
 
     pool.query(sql, (error, results, fields) => {
@@ -559,7 +559,7 @@ app.post('/update_order_item', (req, res) => {
 
     const requestBody = req.body
     const sql = `UPDATE order_item SET 
-                item_qty = '${requestBody.itemQty}',medicine_id = '${requestBody.medicineId}',equipment_id = '${requestBody.equipmentId}',unit_id= '${requestBody.unitId}' WHERE (order_item_id = '${requestBody.orderItemId}');`
+                item_qty = '${requestBody.itemQty}',medicine_id = '${requestBody.medicineId}',equipment_id = '${requestBody.equipmentId}',unit_id= '${requestBody.unitId}',order_id = '${requestBody.orderId}' WHERE (order_item_id = '${requestBody.orderItemId}');`
 
     pool.query(sql, (error, results, fields) => {
         if (error) {
