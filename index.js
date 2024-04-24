@@ -612,7 +612,7 @@ app.post('/new_medicine_stock', (req, res) => {
     const requestBody = req.body
     const sql = `INSERT INTO medicine_stock 
                     (unit_id,medicine_qty,medicine_id,medicine_exp_date,received_date,price_per_unit,invoice_number,qty_stock) 
-                    VALUES ('${requestBody.unitId}','${requestBody.medicineQty}','${requestBody.medicineExpDate}','${requestBody.recievedDate}','${requestBody.pricePerUnit}','${requestBody.invoiceNumber}','${requestBody.qtyStock}');`
+                    VALUES ('${requestBody.unitId}','${requestBody.medicineQty}','${requestBody.medicineId}','${requestBody.medicineExpDate}','${requestBody.recievedDate}','${requestBody.pricePerUnit}','${requestBody.invoiceNumber}','${requestBody.qtyStock}');`
 
 
     pool.query(sql, (error, results, fields) => {
