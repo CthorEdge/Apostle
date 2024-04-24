@@ -131,7 +131,6 @@ app.get('/get_item_referrence', (req, res) => {
 // API SECTION: Root Table Operations
 // ----------------------------------
 
-
 // TABLE account
 // could be use to adjust ppn value
 app.post('/update_account', (req, res) => {
@@ -283,7 +282,7 @@ app.get('/get_ingredient', (req, res) => {
 app.post('/new_order', (req, res) => {
 
     const requestBody = req.body
-    const sql = `INSERT INTO order (order_date,order_item_id) VALUES ('${requestBody.orderDate}', '${requestBody.orderItemId}');`
+    const sql = `INSERT INTO order (order_date,order_item_id) VALUES ('${requestBody.orderDate}', '${requestBody.orderId}');`
 
 
     pool.query(sql, (error, results, fields) => {
@@ -315,7 +314,7 @@ app.post('/delete_order', (req, res) => {
 app.post('/update_order', (req, res) => {
 
     const requestBody = req.body
-    const sql = `UPDATE order SET order_date = '${requestBody.orderDate}', order_item_id = '${requestBody.orderItemId}' WHERE (order_id = '${requestBody.orderId}');`
+    const sql = `UPDATE order SET order_date = '${requestBody.orderDate}' WHERE (order_id = '${requestBody.orderId}');`
 
     pool.query(sql, (error, results, fields) => {
         if (error) {
@@ -546,7 +545,7 @@ app.post('/new_order_item', (req, res) => {
 
     const requestBody = req.body
     const sql = `INSERT INTO order_item 
-                    (item_qty, medicine_id, equipment_id, unit_id, order_id) VALUES ('${requestBody.itemQty}','${requestBody.medicineId}','${requestBody.equipmentId}','${requestBody.unitId}','${requestBody.orderId}');`
+                    (item_qty, medicine_id, equipment_id, unit_id) VALUES ('${requestBody.itemQty}','${requestBody.medicineId}','${requestBody.equipmentId}','${requestBody.unitId}');`
 
 
     pool.query(sql, (error, results, fields) => {
