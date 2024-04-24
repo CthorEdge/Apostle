@@ -612,7 +612,7 @@ app.post('/new_medicine_stock', (req, res) => {
     const requestBody = req.body
     const sql = `INSERT INTO medicine_stock 
                     (unit_id,medicine_qty,medicine_id,medicine_exp_date,received_date,price_per_unit,invoice_number,qty_stock) 
-                    VALUES ('${requestBody.unitId}','${requestBody.medicineQty}','${requestBody.medicineId}','${requestBody.medicineExpDate}','${requestBody.recievedDate}','${requestBody.pricePerUnit}','${requestBody.invoiceNumber}','${requestBody.qtyStock}');`
+                    VALUES ('${requestBody.unitId}','${requestBody.medicineQty}','${requestBody.medicineId}','${requestBody.medicineExpDate}','${requestBody.receivedDate}','${requestBody.pricePerUnit}','${requestBody.invoiceNumber}','${requestBody.qtyStock}');`
 
 
     pool.query(sql, (error, results, fields) => {
@@ -646,7 +646,7 @@ app.post('/update_medicine_stock', (req, res) => {
     const requestBody = req.body
     const sql = `UPDATE medicine_stock SET 
                 qty_stock = '${requestBody.qtyStock}',
-                unit_id = '${requestBody.unitId}',medicine_qty = '${requestBody.medicineQty}',medicine_id = '${requestBody.medicineId}',medicine_exp_date='${requestBody.medicineExpDate}',received_date='${requestBody.recievedDate}',price_per_unit='${requestBody.pricePerUnit}',invoice_number='${requestBody.invoiceNumber}'
+                unit_id = '${requestBody.unitId}',medicine_qty = '${requestBody.medicineQty}',medicine_id = '${requestBody.medicineId}',medicine_exp_date='${requestBody.medicineExpDate}',received_date='${requestBody.receivedDate}',price_per_unit='${requestBody.pricePerUnit}',invoice_number='${requestBody.invoiceNumber}'
                 WHERE (order_item_id = '${requestBody.orderItemId}');`
 
     pool.query(sql, (error, results, fields) => {
@@ -681,7 +681,7 @@ app.post('/new_equipment_stock', (req, res) => {
     const requestBody = req.body
     const sql = `INSERT INTO equipment_stock 
                     (equipment_qty,equipment_id,unit_id,received_date,price_per_unit,invoice_number,qty_stock) 
-                    VALUES ('${requestBody.equipmentQty}','${requestBody.equipmentId}','${requestBody.unitId}','${requestBody.recievedDate}','${requestBody.pricePerUnit}','${requestBody.invoiceNumber}','${requestBody.qtyStock}');`
+                    VALUES ('${requestBody.equipmentQty}','${requestBody.equipmentId}','${requestBody.unitId}','${requestBody.receivedDate}','${requestBody.pricePerUnit}','${requestBody.invoiceNumber}','${requestBody.qtyStock}');`
 
 
     pool.query(sql, (error, results, fields) => {
@@ -715,7 +715,7 @@ app.post('/update_equipment_stock', (req, res) => {
     const requestBody = req.body
     const sql = `UPDATE equipment_stock SET 
                 qty_stock = '${requestBody.qtyStock}',
-                unit_id = '${requestBody.unitId}',equipment_qty = '${requestBody.equipmentQty}',equipment_id = '${requestBody.equipmentId}',received_date='${requestBody.recievedDate}',price_per_unit='${requestBody.pricePerUnit}',invoice_number='${requestBody.invoiceNumber}'
+                unit_id = '${requestBody.unitId}',equipment_qty = '${requestBody.equipmentQty}',equipment_id = '${requestBody.equipmentId}',received_date='${requestBody.receivedDate}',price_per_unit='${requestBody.pricePerUnit}',invoice_number='${requestBody.invoiceNumber}'
                 WHERE (equipment_stock_id = '${requestBody.equipmentStockId}');`
 
     pool.query(sql, (error, results, fields) => {
@@ -750,7 +750,7 @@ app.post('/new_ingredient_stock', (req, res) => {
     const requestBody = req.body
     const sql = `INSERT INTO ingredient_stock 
                     (ingredient_qty,ingredient_id,unit_id,ingredient_exp_date,received_date,price_per_unit,invoice_number,qty_stock) 
-                    VALUES ('${requestBody.ingredientQty}','${requestBody.ingredientId}','${requestBody.unitId}','${requestBody.ingredientExpDate}','${requestBody.recievedDate}','${requestBody.pricePerUnit}','${requestBody.invoiceNumber}','${requestBody.qtyStock}');`
+                    VALUES ('${requestBody.ingredientQty}','${requestBody.ingredientId}','${requestBody.unitId}','${requestBody.ingredientExpDate}','${requestBody.receivedDate}','${requestBody.pricePerUnit}','${requestBody.invoiceNumber}','${requestBody.qtyStock}');`
 
 
     pool.query(sql, (error, results, fields) => {
@@ -784,7 +784,7 @@ app.post('/update_ingredient_stock', (req, res) => {
     const requestBody = req.body
     const sql = `UPDATE ingredient_stock SET
                 qty_stock = '${requestBody.qtyStock}',ingredient_exp_date = '${requestBody.ingredientExpDate}',
-                unit_id = '${requestBody.unitId}',ingredient_qty = '${requestBody.ingredientQty}',ingredient_id = '${requestBody.ingredientId}',received_date='${requestBody.recievedDate}',price_per_unit='${requestBody.pricePerUnit}',invoice_number='${requestBody.invoiceNumber}'
+                unit_id = '${requestBody.unitId}',ingredient_qty = '${requestBody.ingredientQty}',ingredient_id = '${requestBody.ingredientId}',received_date='${requestBody.receivedDate}',price_per_unit='${requestBody.pricePerUnit}',invoice_number='${requestBody.invoiceNumber}'
                 WHERE (ingredient_stock_id = '${requestBody.ingredientStockId}');`
 
     pool.query(sql, (error, results, fields) => {
