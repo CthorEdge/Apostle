@@ -214,6 +214,7 @@ app.get('/get_equipment', (req, res) => {
     });
 });
 
+
 // TABLE ingredient
 app.post('/new_ingredient', (req, res) => {
 
@@ -330,6 +331,20 @@ app.get('/get_order', (req, res) => {
 
     const requestBody = req.body
     const sql = `select * from order WHERE (order_id = '${requestBody.orderId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.json(results)
+    });
+});
+app.get('/get_order_reference', (req, res) => {
+
+    const sql = `select order_id,order_date from order;`
 
     pool.query(sql, (error, results, fields) => {
         if (error) {
@@ -462,6 +477,20 @@ app.get('/get_unit', (req, res) => {
 
     const requestBody = req.body
     const sql = `select * from item_unit WHERE (unit_id = '${requestBody.unitId}');`
+
+    pool.query(sql, (error, results, fields) => {
+        if (error) {
+            console.error('Error executing query:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.json(results)
+    });
+});
+app.get('/get_unit_reference', (req, res) => {
+
+    const sql = `select unit_id,unit_name from item_unit;`
 
     pool.query(sql, (error, results, fields) => {
         if (error) {
