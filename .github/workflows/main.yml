@@ -7,8 +7,8 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    environment: main
     strategy:
       matrix:
         node-version: [20.x]
@@ -16,12 +16,11 @@ jobs:
     steps:
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@v1.0.3
-        env:
+        with:
           host: ${{ secrets.HOST }}
           username: 'root'
           key: ${{ secrets.BACK_END_KEY}}
           port: 22
-        with:
           script: |
            cd /root/apotek-app-fe/
            ls
