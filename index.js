@@ -4,8 +4,10 @@ const fs = require('fs');
 const path = require('path');
 const mysql = require('mysql');
 const express = require('express');
+const cors = require("cors");
 
 const app = express();
+app.use(cors())
 app.use(express.json()); // Middleware to parse JSON request bodies
 app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded request bodies
 
@@ -44,6 +46,13 @@ pool.getConnection((err, connection) => {
 // Start the server
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+app.get('/test', (req, res) => {
+
+    console.log("test succeed");
+    res.json("test succeed");
+
 });
 
 // FUNCTIONAL API SECTION
