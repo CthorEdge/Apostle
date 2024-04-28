@@ -19,7 +19,7 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: 'root'
-          key: ${{ secrets.BACK_END_SECRET_KEY }}
+          key: 'apapa'
           port: 22
           request_pty: true
           script: |
