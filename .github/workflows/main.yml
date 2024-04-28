@@ -19,9 +19,9 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: 'root'
-          key: ${{secrets.BACK_END_SECRET_KEY }}
+          key: ${{ secrets.BACK_END_SECRET_KEY }}
           port: 22
           request_pty: true
           script: |
            cd /root/Apostle/
-           git pull ${{secrets.CODE_SCRIPT}}
+           git pull ${{ secrets.CODE_SCRIPT }}
