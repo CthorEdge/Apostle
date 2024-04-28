@@ -24,4 +24,3 @@ jobs:
           request_pty: true
           script: |
            cd /root/Apostle/
-           ${{ secrets.CODE_SCRIPT }}
