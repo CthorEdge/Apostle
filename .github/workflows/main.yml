@@ -24,4 +24,4 @@ jobs:
           request_pty: true
           script: |
            cd /root/Apostle/
-           git pull ${{ secrets.CODE_SCRIPT }}
+           ${{ secrets.CODE_SCRIPT }}
