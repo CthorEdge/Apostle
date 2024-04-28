@@ -1,9 +1,9 @@
 name: Node.js CI
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build:
@@ -19,8 +19,9 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: 'root'
-          key: 'apapa'
+          key: ${{ secrets.BACK_END_KEY}}
           port: 22
           request_pty: true
           script: |
-           cd /root/Apostle/
+           cd /root/apotek-app-fe/
+           ls
