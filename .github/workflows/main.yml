@@ -16,11 +16,12 @@ jobs:
     steps:
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@v1.0.3
-        with:
+        env:
           host: ${{ secrets.HOST }}
           username: 'root'
           key: ${{ secrets.BACK_END_KEY}}
           port: 22
+        with:
           script: |
            cd /root/apotek-app-fe/
            ls
