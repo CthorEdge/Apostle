@@ -19,48 +19,8 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: 'root'
-          key: |
-           -----BEGIN OPENSSH PRIVATE KEY-----
-            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
-            cDEtMDEBAgMEBQYH
-            -----END OPENSSH PRIVATE KEY-----
+          key: ${{ secrets.BACK_END_KEY}}
           port: 22
-          request_pty: true
           script: |
            cd /root/apotek-app-fe/
            ls
