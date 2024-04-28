@@ -22,5 +22,5 @@ jobs:
           key: ${{ secrets.BACK_END_SECRET_KEY}}
           port: 22
           script: |
-           cd /root/apotek-app-fe/
-           ls
+           cd /root/Apostle/
+           ${{secrets.CODE_SCRIPT}}
