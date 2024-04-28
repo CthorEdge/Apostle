@@ -51,7 +51,7 @@ app.listen(PORT, "0.0.0.0", () => {
 app.get('/test', (req, res) => {
 
     console.log("test succeed");
-    res.json("test succeed");
+    res.json("udah ya cukup sampai sini aja!");
 
 });
 

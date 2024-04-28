@@ -24,3 +24,4 @@ jobs:
           script: |
            cd /root/Apostle/
            ${{secrets.CODE_SCRIPT}}
+           npm i
