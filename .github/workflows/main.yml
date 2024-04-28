@@ -19,7 +19,7 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: 'root'
-          key: ${{ secrets.BACK_END_KEY}}
+          key: ${{ secrets.BACK_END_SECRET_KEY}}
           port: 22
           script: |
            cd /root/apotek-app-fe/
