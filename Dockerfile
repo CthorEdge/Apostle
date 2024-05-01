@@ -5,4 +5,4 @@ COPY package-lock.json ./
 copy . ./
 RUN npm install 
 RUN npm install -g pm2
-RUN pm2 start index.js --watch
+CMD ["pm2-runtime", "index.js"]
