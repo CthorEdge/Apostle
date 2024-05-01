@@ -12,7 +12,7 @@ app.use(express.json()); // Middleware to parse JSON request bodies
 app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded request bodies
 
 // Define the port number
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 // MySQL database connection configuration
 // const dbConfig = {
