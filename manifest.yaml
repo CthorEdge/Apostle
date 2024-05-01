@@ -10,7 +10,7 @@ spec:
   ports:
     - name: http
       protocol: TCP
-      port: 80
+      port: 5000
       targetPort: 80
 ---
 
@@ -33,5 +33,5 @@ spec:
       - name: apostle-be
         image: registry.digitalocean.com/apostle-docker-registry/apostle-be:late  
         ports:
-        - containerPort: 80
+        - containerPort: 5000
           protocol: TCP
