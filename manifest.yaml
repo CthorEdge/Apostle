@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apostle-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: apostle
+  template:
+    metadata:
+      labels:
+        app: apostle
+    spec:
+      containers:
+      - name: apostle-fe
+        image: registry.digitalocean.com/apostle-docker-registry/apostle-fe
+        ports:
+        - containerPort: 80
+          protocol: TCP

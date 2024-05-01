@@ -1,27 +1,31 @@
-name: Node.js CI
+name : Build the app to digital ocean registry
+
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  build:
+  build_and_push:
     runs-on: ubuntu-latest
-    environment: master
-    strategy:
-      matrix:
-        node-version: [20.x]
-
     steps:
-      - name: executing remote ssh commands using ssh key
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Checkout the repo 
+        uses: actions/checkout@main
+      - name: Build image 
+        run: docker build -t apostle/be  .
+      - name: Install doctl 
+        uses: digitalocean/action-doctl@v2
         with:
-          host: ${{ secrets.HOST }}
-          username: 'root'
-          key: ${{ secrets.BACK_END_SECRET_KEY}}
-          port: 22
-          script: |
-           cd /root/Apostle/
-           ${{secrets.CODE_SCRIPT}}
-           npm i
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Log in to DO Container Registry 
+        run: doctl registry login --expiry-seconds 600
+      - name: Tag image 
+        run:
+          docker tag apostle/be \registry.digitalocean.com/apostle-docker-registry/apostle-be:latest
+      - name: Push image to DO Container Registry 
+        run: docker push registry.digitalocean.com/apostle-docker-registry/apostle-be:latest  
+      - name: Save DigitalOcean kubeconfig with short-lived credentials
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 01b1870c-dbec-4bc7-8d4f-edb81899f516   
+      - name: Deploy to DigitalOcean Kubernetes
+        run: kubectl apply -f $GITHUB_WORKSPACE/manifest.yaml

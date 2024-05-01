@@ -1,0 +1,7 @@
+.github
+.git
+*.md
+LICENSE
+.gitignore
+.gitattributes
+node_modules
