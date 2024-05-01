@@ -1,20 +1,37 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: apostle-app-be-lb
+spec:
+  type: LoadBalancer
+  selector:
+    app: apostle-app-be
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+---
+
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: apostle-deployment
+  name: apostle-be-deployment
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: apostle
+      app: apostle-app-be
   template:
     metadata:
       labels:
-        app: apostle
+        app: apostle-app-be
     spec:
       containers:
-      - name: apostle-fe
-        image: registry.digitalocean.com/apostle-docker-registry/apostle-fe
+      - name: apostle-be
+        image: registry.digitalocean.com/apostle-docker-registry/apostle-be:late  
         ports:
         - containerPort: 80
           protocol: TCP
