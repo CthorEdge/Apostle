@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: apostle-be
-        image: registry.digitalocean.com/apostle-docker-registry/apostle-be:late  
+        image: registry.digitalocean.com/apostle-docker-registry/apostle-be:latest  
         ports:
         - containerPort: 5000
           protocol: TCP
